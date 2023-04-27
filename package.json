@@ -25,7 +25,7 @@
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^2.5.5",
-		"@clerk/nextjs": "^4.14.1",
+		"@clerk/nextjs": "^4.16.4",
 		"@emotion/react": "^11.10.6",
 		"@emotion/styled": "^11.10.6",
 		"@prisma/client": "^4.11.0",
