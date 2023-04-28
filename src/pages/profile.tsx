@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import fetchAuthorBooks from '../components/fetchAuthorBooks';
+import Book, { BookProps } from '../components/Book';
 
 interface ProfileProps {
+	authorId: string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -8,13 +11,33 @@ interface ProfileProps {
 	city: string;
 }
 
-const Profile: React.FC<ProfileProps> = (author) => {
+const Profile: React.FC<ProfileProps> = ({
+	authorId,
+	firstName,
+	lastName,
+	email,
+	country,
+	city,
+}) => {
 	const [isEditing, setIsEditing] = useState(false);
-	const [firstName, setFirstName] = useState(author.firstName);
-	const [lastName, setLastName] = useState(author.lastName);
-	const [email, setEmail] = useState(author.email);
-	const [country, setCountry] = useState(author.country);
-	const [city, setCity] = useState(author.city);
+	const [author, setAuthor] = useState<ProfileProps>({
+		authorId,
+		firstName,
+		lastName,
+		email,
+		country,
+		city,
+	});
+	const [books, setBooks] = useState<BookProps[]>([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			const authorBooks = await fetchAuthorBooks(authorId);
+			setBooks(authorBooks);
+		};
+
+		fetchData();
+	}, [authorId]);
 
 	const handleSave = () => {
 		// Save changes to the server
@@ -24,48 +47,62 @@ const Profile: React.FC<ProfileProps> = (author) => {
 	return (
 		<div className='Profile'>
 			<h2>
-				{firstName} {lastName}
+				{author.firstName} {author.lastName}
 			</h2>
 			<div className='Profile-details'>
 				{isEditing ? (
 					<>
 						<input
 							type='text'
-							value={firstName}
-							onChange={(e) => setFirstName(e.target.value)}
+							value={author.firstName}
+							onChange={(e) =>
+								setAuthor({ ...author, firstName: e.target.value })
+							}
 						/>
 						<input
 							type='text'
-							value={lastName}
-							onChange={(e) => setLastName(e.target.value)}
+							value={author.lastName}
+							onChange={(e) =>
+								setAuthor({ ...author, lastName: e.target.value })
+							}
 						/>
 						<input
 							type='text'
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
+							value={author.email}
+							onChange={(e) => setAuthor({ ...author, email: e.target.value })}
 						/>
 						<input
 							type='text'
-							value={country}
-							onChange={(e) => setCountry(e.target.value)}
+							value={author.country}
+							onChange={(e) =>
+								setAuthor({ ...author, country: e.target.value })
+							}
 						/>
 						<input
 							type='text'
-							value={city}
-							onChange={(e) => setCity(e.target.value)}
+							value={author.city}
+							onChange={(e) => setAuthor({ ...author, city: e.target.value })}
 						/>
 						<button onClick={handleSave}>Save</button>
 					</>
 				) : (
 					<>
-						<div>First Name: {firstName}</div>
-						<div>Last Name: {lastName}</div>
-						<div>Email: {email}</div>
-						<div>Country: {country}</div>
-						<div>City: {city}</div>
+						<div>First Name: {author.firstName}</div>
+						<div>Last Name: {author.lastName}</div>
+						<div>Email: {author.email}</div>
+						<div>Country: {author.country}</div>
+						<div>City: {author.city}</div>
 						<button onClick={() => setIsEditing(true)}>Edit</button>
 					</>
 				)}
+			</div>
+			<h2>
+				Books by {author.firstName} {author.lastName}
+			</h2>
+			<div>
+				{books.map((book) => (
+					<Book key={book.id} {...book} />
+				))}
 			</div>
 		</div>
 	);
