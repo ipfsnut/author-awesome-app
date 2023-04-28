@@ -1,111 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import fetchAuthorBooks from '../components/fetchAuthorBooks';
-import Book, { BookProps } from '../components/Book';
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
+import Head from 'next/head';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+import fetchAuthorBooksFromAPI from 'src/components/fetchAuthorBooksFromAPI';
+import { BookProps } from 'src/components/BookComponent';
 
-interface ProfileProps {
-	authorId: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	country: string;
-	city: string;
-}
-
-const Profile: React.FC<ProfileProps> = ({
-	authorId,
-	firstName,
-	lastName,
-	email,
-	country,
-	city,
-}) => {
-	const [isEditing, setIsEditing] = useState(false);
-	const [author, setAuthor] = useState<ProfileProps>({
-		authorId,
-		firstName,
-		lastName,
-		email,
-		country,
-		city,
-	});
-	const [books, setBooks] = useState<BookProps[]>([]);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			const authorBooks = await fetchAuthorBooks(authorId);
-			setBooks(authorBooks);
-		};
-
-		fetchData();
-	}, [authorId]);
-
-	const handleSave = () => {
-		// Save changes to the server
-		setIsEditing(false);
-	};
-
-	return (
-		<div className='Profile'>
-			<h2>
-				{author.firstName} {author.lastName}
-			</h2>
-			<div className='Profile-details'>
-				{isEditing ? (
-					<>
-						<input
-							type='text'
-							value={author.firstName}
-							onChange={(e) =>
-								setAuthor({ ...author, firstName: e.target.value })
-							}
-						/>
-						<input
-							type='text'
-							value={author.lastName}
-							onChange={(e) =>
-								setAuthor({ ...author, lastName: e.target.value })
-							}
-						/>
-						<input
-							type='text'
-							value={author.email}
-							onChange={(e) => setAuthor({ ...author, email: e.target.value })}
-						/>
-						<input
-							type='text'
-							value={author.country}
-							onChange={(e) =>
-								setAuthor({ ...author, country: e.target.value })
-							}
-						/>
-						<input
-							type='text'
-							value={author.city}
-							onChange={(e) => setAuthor({ ...author, city: e.target.value })}
-						/>
-						<button onClick={handleSave}>Save</button>
-					</>
-				) : (
-					<>
-						<div>First Name: {author.firstName}</div>
-						<div>Last Name: {author.lastName}</div>
-						<div>Email: {author.email}</div>
-						<div>Country: {author.country}</div>
-						<div>City: {author.city}</div>
-						<button onClick={() => setIsEditing(true)}>Edit</button>
-					</>
-				)}
-			</div>
-			<h2>
-				Books by {author.firstName} {author.lastName}
-			</h2>
-			<div>
-				{books.map((book) => (
-					<Book key={book.id} {...book} />
-				))}
-			</div>
-		</div>
-	);
+type Props = {
+	authorName: string;
+	books: BookProps[];
 };
 
-export default Profile;
+export default function Profile({ authorName, books }: Props) {
+	const router = useRouter();
+	const [query, setQuery] = useState<string>('');
+
+	const { data: filteredBooks, isLoading } = useQuery(
+		['filteredBooks', query],
+		() => {
+			return fetchAuthorBooksFromAPI(router.query.id as string).then((data) => {
+				return data.filter((book) => {
+					return book.title.toLowerCase().includes(query.toLowerCase());
+				});
+			});
+		}
+	);
+
+	if (router.isFallback) {
+		return <div>Loading...</div>;
+	}
+
+	return (
+		<div>
+			<Head>
+				<title>{authorName} - Profile</title>
+				<link rel='icon' href='/favicon.ico' />
+			</Head>
+
+			<main>
+				<h1 className='title'>{authorName}</h1>
+				<p>Search for a book:</p>
+				<input type='text' onChange={(e) => setQuery(e.target.value)} />
+				{isLoading && <div>Loading...</div>}
+				{filteredBooks && (
+					<div>
+						<h2>Books:</h2>
+						<ul>
+							{filteredBooks.map((book) => (
+								<li key={book.id}>
+									<Link href={`/books/${book.id}`}>
+										<a>
+											{book.title} by {authorName}
+										</a>
+									</Link>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+				<div>
+					<h2>All Books:</h2>
+					<ul>
+						{books.map((book) => (
+							<li key={book.id}>
+								<Link href={`/books/${book.id}`}>
+									<a>
+										{book.title} by {authorName}
+									</a>
+								</Link>
+							</li>
+						))}
+					</ul>
+				</div>
+			</main>
+		</div>
+	);
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+	const res = await fetch('http://localhost:3000/api/authors');
+	const authors = await res.json();
+	const paths = authors.map((author: { id: string }) => ({
+		params: { id: author.id },
+	}));
+	return { paths, fallback: true };
+};
+
+export const getStaticProps: GetStaticProps<Props> = async (
+	context: GetStaticPropsContext
+) => {
+	const id = context.params?.id;
+
+	if (!id) {
+		return {
+			notFound: true,
+		};
+	}
+
+	const res = await fetch(`http://localhost:3000/api/books?authorId=${id}`);
+	const books = await res.json();
+	const authorName = books.length > 0 ? books[0].AuthorName : 'Unknown Author';
+
+	return {
+		props: {
+			authorName,
+			books,
+		},
+		revalidate: 60,
+	};
+};

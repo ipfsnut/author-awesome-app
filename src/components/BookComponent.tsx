@@ -11,20 +11,14 @@ import {
 } from '@chakra-ui/react';
 
 export type BookProps = {
-	id: string;
+	id: number;
 	title: string;
-	author: {
-		id: string;
-		firstName: string;
-		lastName: string;
-	};
-	imageUrl: string;
-	description: string;
+	coverUrl: string;
+	authorId: number;
+	AuthorName: string;
 };
 
-const Book = ({ id, title, author, imageUrl, description }: BookProps) => {
-	const authorName = `${author.firstName} ${author.lastName}`;
-
+const BookComponent = ({ title, coverUrl, AuthorName }: BookProps) => {
 	return (
 		<Box
 			maxW='sm'
@@ -33,7 +27,7 @@ const Book = ({ id, title, author, imageUrl, description }: BookProps) => {
 			overflow='hidden'
 			boxShadow='lg'
 		>
-			<Image src={imageUrl} alt={`${title} book cover`} />
+			<Image src={coverUrl} alt={`${title} book cover`} />
 
 			<VStack p='6' spacing='4' alignItems='flex-start'>
 				<Flex>
@@ -44,13 +38,10 @@ const Book = ({ id, title, author, imageUrl, description }: BookProps) => {
 					</Button>
 				</Flex>
 
-				<Text fontWeight='bold'>{authorName}</Text>
-				<Text fontSize='sm' noOfLines={4}>
-					{description}
-				</Text>
+				<Text fontWeight='bold'>{AuthorName}</Text>
 			</VStack>
 		</Box>
 	);
 };
 
-export default Book;
+export default BookComponent;
