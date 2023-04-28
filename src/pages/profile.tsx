@@ -1,4 +1,4 @@
-import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from 'next';
+import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -14,6 +14,9 @@ type Props = {
 
 export default function Profile({ authorName, books }: Props) {
 	const router = useRouter();
+
+	console.log(router.query);
+
 	const [query, setQuery] = useState<string>('');
 
 	const { data: filteredBooks, isLoading } = useQuery(
@@ -78,27 +81,16 @@ export default function Profile({ authorName, books }: Props) {
 	);
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-	const res = await fetch('http://localhost:3000/api/authors');
-	const authors = await res.json();
-	const paths = authors.map((author: { id: string }) => ({
-		params: { id: author.id },
-	}));
-	return { paths, fallback: true };
-};
-
-export const getStaticProps: GetStaticProps<Props> = async (
-	context: GetStaticPropsContext
-) => {
-	const id = context.params?.id;
-
-	if (!id) {
+export async function getStaticProps(context: GetStaticPropsContext) {
+	const { params } = context;
+	if (!params?.id) {
 		return {
 			notFound: true,
 		};
 	}
-
-	const res = await fetch(`http://localhost:3000/api/books?authorId=${id}`);
+	const res = await fetch(
+		`http://localhost:3000/api/books?authorId=${params.id}`
+	);
 	const books = await res.json();
 	const authorName = books.length > 0 ? books[0].AuthorName : 'Unknown Author';
 
@@ -109,4 +101,4 @@ export const getStaticProps: GetStaticProps<Props> = async (
 		},
 		revalidate: 60,
 	};
-};
+}

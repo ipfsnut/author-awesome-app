@@ -1,7 +1,7 @@
 // src/pages/api/authorBooks.ts
 
 import { NextApiRequest, NextApiResponse } from 'next';
-import fetchAuthorBooksFromAPI from 'src/components/fetchAuthorBooksFromAPI';
+import { fetchAuthorBooksFromAPI } from 'src/components/fetchAuthorBooksFromAPI';
 import { BookProps } from '~/components/BookComponent';
 
 export default async (
