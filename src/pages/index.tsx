@@ -10,7 +10,10 @@ import {
 	CardBody,
 	CardFooter,
 	Heading,
+	Wrap,
+	WrapItem,
 } from '@chakra-ui/react';
+import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
 
 import { api } from '~/utils/api';
 
@@ -39,8 +42,16 @@ const Home: NextPage = () => {
 				<meta name='description' content='meh' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<main className='flex min-h-screen flex-col items-center justify-center'>
+			<main className='flex min-h-screen flex-col items-center justify-center bg-ffffff '>
 				<div>
+					<Wrap>
+						<WrapItem>
+							<Avatar
+								name='epicdylan'
+								src='https://twitter.com/thomasdylandan2/photo'
+							/>
+						</WrapItem>
+					</Wrap>
 					{!user.isSignedIn && <SignInButton />}
 					{!!user.isSignedIn && <SignOutButton />}
 				</div>
@@ -52,8 +63,11 @@ const Home: NextPage = () => {
 					</CardBody>
 				</Card>
 				<div>
-					{data?.map((post) => (
-						<div key={post.id}>{post.content}</div>
+					{data?.map((post, author) => (
+						<div key={post.id}>
+							{post.content}
+							{post.content}
+						</div>
 					))}
 				</div>
 			</main>
