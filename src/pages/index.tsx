@@ -1,7 +1,13 @@
 import styles from './index.module.css';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import { SignIn, SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
+import {
+	SignIn,
+	SignInButton,
+	SignOutButton,
+	UserProfile,
+	useUser,
+} from '@clerk/nextjs';
 import { SetStateAction, useEffect, useState } from 'react';
 import {
 	Card,
@@ -22,6 +28,7 @@ import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
 import Image from 'next/image';
 
 import { api } from '~/utils/api';
+import authorBooks from './api/trpc/authorBooks';
 
 const CreatePostWizard = () => {
 	const { user } = useUser();
@@ -106,7 +113,7 @@ const Home: NextPage = () => {
 				>
 					<Card bg='fuchsia'>
 						<CardBody bg='tomato' gap='7'>
-							<Heading>testing card functionality</Heading>
+							<Heading>Work in Progress</Heading>
 							This is outside the heading, beneath it
 						</CardBody>
 						beyond that, the card body ends.
@@ -124,6 +131,15 @@ const Home: NextPage = () => {
 								))}
 							</Stack>
 						</CardBody>
+						<CardFooter>
+							<a
+								href='https://github.com/ipfsnut/author-awesome-app'
+								target='_blank'
+								rel='noopener noreferrer'
+							>
+								https://github.com/ipfsnut/author-awesome-app
+							</a>
+						</CardFooter>
 					</Card>
 				</Container>
 			</main>
