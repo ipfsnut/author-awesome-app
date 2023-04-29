@@ -4,8 +4,25 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { SignIn, SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
 import { SetStateAction, useEffect, useState } from 'react';
+import {
+	Card,
+	CardHeader,
+	CardBody,
+	CardFooter,
+	Heading,
+} from '@chakra-ui/react';
 
 import { api } from '~/utils/api';
+
+const CreatePostWizard = () => {
+	const { user } = useUser();
+	if (!user) return null;
+	return (
+		<div>
+			<img src={user.profileImageUrl} alt='Profile image' />
+		</div>
+	);
+};
 
 const Home: NextPage = () => {
 	const hello = api.example.hello.useQuery({ text: 'from tRPC' });
@@ -27,6 +44,13 @@ const Home: NextPage = () => {
 					{!user.isSignedIn && <SignInButton />}
 					{!!user.isSignedIn && <SignOutButton />}
 				</div>
+				<Card>
+					<CardBody>
+						<Heading>
+							View a summary of all your customers over the last month.
+						</Heading>
+					</CardBody>
+				</Card>
 				<div>
 					{data?.map((post) => (
 						<div key={post.id}>{post.content}</div>
