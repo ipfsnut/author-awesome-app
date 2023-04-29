@@ -40,7 +40,11 @@ export default function Profile({ authorName, books }: Props) {
 				<title>{authorName} - Profile</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-
+			return (
+			<div>
+				<Head>{/* ... */}</Head>
+			</div>
+			);
 			<main>
 				<h1 className='title'>{authorName}</h1>
 				<p>Search for a book:</p>

@@ -1,36 +1,36 @@
-import { Author } from '.prisma/client';
+import { Post } from '.prisma/client';
 
-export const updateAuthor = async (author: Author) => {
+export const updatePost = async (post: Post) => {
 	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/authors/${author.id}`,
+		`${process.env.NEXT_PUBLIC_API_URL}/post/${post.id}`,
 		{
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(author),
+			body: JSON.stringify(post),
 		}
 	);
 
 	if (!response.ok) {
-		throw new Error('Failed to update author');
+		throw new Error('Failed to update post');
 	}
 
-	const updatedAuthor = await response.json();
+	const updatedPost = await response.json();
 
-	return updatedAuthor;
+	return updatedPost;
 };
 
-export const deleteAuthor = async (id: string) => {
+export const deletePost = async (id: string) => {
 	const response = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/authors/${id}`,
+		`${process.env.NEXT_PUBLIC_API_URL}/posts/${id}`,
 		{
 			method: 'DELETE',
 		}
 	);
 
 	if (!response.ok) {
-		throw new Error('Failed to delete author');
+		throw new Error('Failed to delete post');
 	}
 
 	return true;
