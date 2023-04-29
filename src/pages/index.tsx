@@ -101,10 +101,7 @@ const Home: NextPage = () => {
 				</Card>
 				<div>
 					{data?.map((post) => (
-						<div key={post.id}>
-							{post.content}
-							{post.content}
-						</div>
+						<div key={post.id}>{post.content}</div>
 					))}
 				</div>
 			</main>
