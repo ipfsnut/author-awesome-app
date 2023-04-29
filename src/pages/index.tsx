@@ -1,7 +1,6 @@
 import styles from './index.module.css';
 import { NextPage } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { SignIn, SignInButton, SignOutButton, useUser } from '@clerk/nextjs';
 import { SetStateAction, useEffect, useState } from 'react';
 import {
@@ -14,6 +13,7 @@ import {
 	WrapItem,
 } from '@chakra-ui/react';
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
+import Image from 'next/image';
 
 import { api } from '~/utils/api';
 
@@ -21,8 +21,47 @@ const CreatePostWizard = () => {
 	const { user } = useUser();
 	if (!user) return null;
 	return (
+		<Avatar>
+			<Image
+				src={user.profileImageUrl}
+				alt='Profile image'
+				width={50}
+				height={50}
+			/>
+		</Avatar>
+	);
+};
+
+type Post = {
+	id: string;
+	content: string;
+	authorId: string;
+	// add other properties of the post as needed
+};
+
+type Author = {
+	id: string;
+	username: string;
+	profileImageUrl: string;
+};
+
+type PostWithUser = {
+	post: Post;
+	author: {
+		id: string;
+		username: string | null;
+		profileImageUrl: string;
+	};
+};
+
+const PostView = (props: PostWithUser) => {
+	const { post, author } = props;
+	return (
 		<div>
-			<img src={user.profileImageUrl} alt='Profile image' />
+			<div>
+				<span>${author.username}</span>
+			</div>
+			<span>{post.content}</span>
 		</div>
 	);
 };
@@ -38,32 +77,30 @@ const Home: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Create T3 App</title>
+				<title>Wohoo</title>
 				<meta name='description' content='meh' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			<main className='flex min-h-screen flex-col items-center justify-center bg-ffffff '>
+			<main>
 				<div>
-					<Wrap>
-						<WrapItem>
-							<Avatar
-								name='epicdylan'
-								src='https://twitter.com/thomasdylandan2/photo'
-							/>
-						</WrapItem>
-					</Wrap>
-					{!user.isSignedIn && <SignInButton />}
-					{!!user.isSignedIn && <SignOutButton />}
+					<Avatar bg='fuchsia'></Avatar>
+
+					{!user.isSignedIn && (
+						<div className='flex justify-center'>
+							<SignInButton />
+						</div>
+					)}
+					{!!user.isSignedIn && <CreatePostWizard />}
 				</div>
-				<Card>
-					<CardBody>
-						<Heading>
-							View a summary of all your customers over the last month.
-						</Heading>
+				<Card bg='fuchsia'>
+					<CardBody bg='tomato'>
+						<Heading>testing card functionality</Heading>
+						This is outside the heading, beneath it
 					</CardBody>
+					beyond that, the card body ends.
 				</Card>
 				<div>
-					{data?.map((post, author) => (
+					{data?.map((post) => (
 						<div key={post.id}>
 							{post.content}
 							{post.content}
