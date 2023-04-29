@@ -8,9 +8,15 @@ import {
 	CardHeader,
 	CardBody,
 	CardFooter,
+	Container,
 	Heading,
 	Wrap,
 	WrapItem,
+	Flex,
+	Center,
+	Stack,
+	StackDivider,
+	Box,
 } from '@chakra-ui/react';
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
 import Image from 'next/image';
@@ -21,7 +27,7 @@ const CreatePostWizard = () => {
 	const { user } = useUser();
 	if (!user) return null;
 	return (
-		<Avatar>
+		<Avatar bg='fuchsia'>
 			<Image
 				src={user.profileImageUrl}
 				alt='Profile image'
@@ -57,12 +63,12 @@ type PostWithUser = {
 const PostView = (props: PostWithUser) => {
 	const { post, author } = props;
 	return (
-		<div>
-			<div>
+		<Flex color='blue'>
+			<Center w='100px' bg='green.500'>
 				<span>${author.username}</span>
-			</div>
+			</Center>
 			<span>{post.content}</span>
-		</div>
+		</Flex>
 	);
 };
 
@@ -92,18 +98,34 @@ const Home: NextPage = () => {
 					)}
 					{!!user.isSignedIn && <CreatePostWizard />}
 				</div>
-				<Card bg='fuchsia'>
-					<CardBody bg='tomato'>
-						<Heading>testing card functionality</Heading>
-						This is outside the heading, beneath it
-					</CardBody>
-					beyond that, the card body ends.
-				</Card>
-				<div>
-					{data?.map((post) => (
-						<div key={post.id}>{post.content}</div>
-					))}
-				</div>
+				<Container
+					minWidth='max-content'
+					alignItems='center'
+					gap='20'
+					bg='floralwhite'
+				>
+					<Card bg='fuchsia'>
+						<CardBody bg='tomato' gap='7'>
+							<Heading>testing card functionality</Heading>
+							This is outside the heading, beneath it
+						</CardBody>
+						beyond that, the card body ends.
+					</Card>
+					<Card alignItems='center' bg='brown' gap='15'>
+						<CardHeader bg='yellowgreen'>
+							<Heading size='md' gap='10'>
+								Definitely Not Your Typical Client Report
+							</Heading>
+						</CardHeader>
+						<CardBody alignItems='center' bg='greenyellow'>
+							<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
+								{data?.map((post) => (
+									<div key={post.id}>{post.content}</div>
+								))}
+							</Stack>
+						</CardBody>
+					</Card>
+				</Container>
 			</main>
 		</>
 	);
