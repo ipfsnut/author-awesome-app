@@ -5,6 +5,7 @@ const AddBookForm = () => {
 	const [title, setTitle] = useState('');
 	const [coverUrl, setCoverUrl] = useState('');
 	const [AuthorName, setAuthorName] = useState('');
+	const [ExternalResource, setexternal_resource] = useState('');
 
 	const handleSubmit = (event: React.FormEvent) => {
 		event.preventDefault();
@@ -16,6 +17,7 @@ const AddBookForm = () => {
 		setTitle('');
 		setCoverUrl('');
 		setAuthorName('');
+		setexternal_resource('');
 	};
 
 	return (
@@ -36,6 +38,11 @@ const AddBookForm = () => {
 						placeholder='Author Name'
 						value={AuthorName}
 						onChange={(event) => setAuthorName(event.target.value)}
+					/>
+					<Input
+						placeholder='External Resource'
+						value={ExternalResource}
+						onChange={(event) => setexternal_resource(event.target.value)}
 					/>
 					<Button type='submit' colorScheme='blue'>
 						Add Book

@@ -150,9 +150,8 @@ const Home: NextPage = () => {
 												src={bookData.external_resource}
 												title={`External resource for book ${bookData.id}`}
 												width='100%'
-												height='400px'
-												frameBorder='0'
-												allowFullScreen
+												height='600px'
+												frameBorder='05'
 											></iframe>
 										)}
 									</div>
