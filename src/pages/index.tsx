@@ -80,7 +80,7 @@ const Home: NextPage = () => {
 	return (
 		<>
 			<Head>
-				<title>Wohoo</title>
+				<title>Author Awesome App</title>
 				<meta name='description' content='meh' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
@@ -152,6 +152,7 @@ const Home: NextPage = () => {
 												width='100%'
 												height='600px'
 												frameBorder='05'
+												allowFullScreen
 											></iframe>
 										)}
 									</div>
