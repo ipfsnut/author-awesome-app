@@ -90,7 +90,8 @@ const Home: NextPage = () => {
 	const [profile, setProfile] = useState(null);
 	console.log(hello.data);
 
-	const { data } = api.example.getAll.useQuery();
+	const { data: post } = api.example.getAll.useQuery();
+	const { data: books } = api.books.getAllBooks.useQuery();
 
 	return (
 		<>
@@ -131,7 +132,7 @@ const Home: NextPage = () => {
 						</CardHeader>
 						<CardBody alignItems='center' bg='greenyellow'>
 							<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
-								{data?.map((post) => (
+								{post?.map((post) => (
 									<div key={post.id}>{post.content}</div>
 								))}
 							</Stack>
@@ -154,32 +155,17 @@ const Home: NextPage = () => {
 					gap='20'
 					bg='floralwhite'
 				>
-					<Card bg='fuchsia'>
-						<CardBody bg='tomato' gap='7'>
-							<Heading>Title</Heading>
-						</CardBody>
-						beyond that, the card body ends.
-					</Card>
 					<Card alignItems='center' bg='brown' gap='15'>
 						<CardBody alignItems='center' bg='greenyellow'>
+							{books && <DisplayBooks books={books} />}
 							<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
-								{data?.map((book) => (
-									<div key={book.id}>{book.authorId}</div>
+								{books?.map((bookData) => (
+									<div key={bookData.id}>{bookData.authorId}</div>
 								))}
 							</Stack>
 						</CardBody>
-						<CardFooter>
-							<a
-								href='https://github.com/ipfsnut/author-awesome-app'
-								target='_blank'
-								rel='noopener noreferrer'
-							>
-								https://github.com/ipfsnut/author-awesome-app
-							</a>
-						</CardFooter>
 					</Card>
 				</Container>
-				<DisplayBooks books={booksData} />
 			</main>
 		</>
 	);
