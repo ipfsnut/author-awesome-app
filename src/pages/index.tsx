@@ -24,14 +24,17 @@ import {
 	StackDivider,
 	Box,
 } from '@chakra-ui/react';
+import AddBookForm from 'src/components/AddBookForm';
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
 import Image from 'next/image';
 
 import { api } from '~/utils/api';
-import authorBooks from './api/trpc/authorBooks';
+import { BookProps } from 'src/components/BookComponent';
+import BookComponent from 'src/components/BookComponent';
 
 const CreatePostWizard = () => {
 	const { user } = useUser();
+	console.log(user);
 	if (!user) return null;
 	return (
 		<Avatar bg='fuchsia'>
@@ -42,6 +45,26 @@ const CreatePostWizard = () => {
 				height={50}
 			/>
 		</Avatar>
+	);
+};
+
+const DisplayBooks = ({ books }: { books: BookProps[] }) => {
+	return (
+		<Card alignItems='center' bg='greenyellow'>
+			<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
+				{books?.map((book) => (
+					<div key={book.id}>
+						<BookComponent
+							id={book.id}
+							title={book.title}
+							coverUrl={book.coverUrl}
+							authorId={book.authorId}
+							AuthorName={book.AuthorName}
+						/>
+					</div>
+				))}
+			</Stack>
+		</Card>
 	);
 };
 
@@ -82,6 +105,7 @@ const PostView = (props: PostWithUser) => {
 const Home: NextPage = () => {
 	const hello = api.example.hello.useQuery({ text: 'from tRPC' });
 	const user = useUser();
+	const [booksData, setBooksData] = useState<BookProps[]>([]);
 	const [profile, setProfile] = useState(null);
 	console.log(hello.data);
 
@@ -141,7 +165,40 @@ const Home: NextPage = () => {
 							</a>
 						</CardFooter>
 					</Card>
+					<AddBookForm />
 				</Container>
+				<Container
+					minWidth='max-content'
+					alignItems='center'
+					gap='20'
+					bg='floralwhite'
+				>
+					<Card bg='fuchsia'>
+						<CardBody bg='tomato' gap='7'>
+							<Heading>Title</Heading>
+						</CardBody>
+						beyond that, the card body ends.
+					</Card>
+					<Card alignItems='center' bg='brown' gap='15'>
+						<CardBody alignItems='center' bg='greenyellow'>
+							<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
+								{data?.map((book) => (
+									<div key={book.id}>{book.authorId}</div>
+								))}
+							</Stack>
+						</CardBody>
+						<CardFooter>
+							<a
+								href='https://github.com/ipfsnut/author-awesome-app'
+								target='_blank'
+								rel='noopener noreferrer'
+							>
+								https://github.com/ipfsnut/author-awesome-app
+							</a>
+						</CardFooter>
+					</Card>
+				</Container>
+				<DisplayBooks books={booksData} />
 			</main>
 		</>
 	);

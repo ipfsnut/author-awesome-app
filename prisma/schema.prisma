@@ -14,5 +14,22 @@ model Post {
   updatedAt DateTime  @updatedAt
   content   String    @db.VarChar(255)
   authorId  String
-  @@index([authorId])
+  @@index([authorId])   
 }
+
+model Book {
+  id               Int      @id @default(autoincrement())
+  title            String
+  coverUrl         String
+  authorId         Int
+  AuthorName       String
+  external_resource String?  // This field can be nullable
+  metadata         String?  // This field can be nullable
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+
+
+// ContractAddressOnPageNetwork Book ID unique identifier - not just a contract address! 
+// Complex; Author Name, Book Title, Chain IDs, Contract Addresses, ISBN, Ebook info.
