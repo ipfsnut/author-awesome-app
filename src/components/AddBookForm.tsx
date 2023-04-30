@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Input, VStack, Button } from '@chakra-ui/react';
+import { Box, Input, VStack, Button, Card } from '@chakra-ui/react';
 
 const AddBookForm = () => {
 	const [title, setTitle] = useState('');
@@ -19,28 +19,30 @@ const AddBookForm = () => {
 	};
 
 	return (
-		<Box as='form' onSubmit={handleSubmit}>
-			<VStack spacing={4}>
-				<Input
-					placeholder='Title'
-					value={title}
-					onChange={(event) => setTitle(event.target.value)}
-				/>
-				<Input
-					placeholder='Cover URL'
-					value={coverUrl}
-					onChange={(event) => setCoverUrl(event.target.value)}
-				/>
-				<Input
-					placeholder='Author Name'
-					value={AuthorName}
-					onChange={(event) => setAuthorName(event.target.value)}
-				/>
-				<Button type='submit' colorScheme='blue'>
-					Add Book
-				</Button>
-			</VStack>
-		</Box>
+		<Card padding='5px' bg='black'>
+			<Box as='form' onSubmit={handleSubmit}>
+				<VStack spacing={4}>
+					<Input
+						placeholder='Title'
+						value={title}
+						onChange={(event) => setTitle(event.target.value)}
+					/>
+					<Input
+						placeholder='Cover URL'
+						value={coverUrl}
+						onChange={(event) => setCoverUrl(event.target.value)}
+					/>
+					<Input
+						placeholder='Author Name'
+						value={AuthorName}
+						onChange={(event) => setAuthorName(event.target.value)}
+					/>
+					<Button type='submit' colorScheme='blue'>
+						Add Book
+					</Button>
+				</VStack>
+			</Box>
+		</Card>
 	);
 };
 

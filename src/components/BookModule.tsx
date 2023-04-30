@@ -1,16 +1,17 @@
-import { useQuery } from 'react-query';
+import React from 'react';
+import { BookProps } from './BookComponent';
+import BookComponent from './BookComponent';
 import { Card, Stack, StackDivider } from '@chakra-ui/react';
-import { BookProps } from 'src/components/BookComponent';
-import BookComponent from 'src/components/BookComponent';
-import { api } from '~/utils/api';
 
-export const DisplayBooks = () => {
-	const { data: booksData } = api.books.getAllBooks.useQuery();
+interface DisplayBooksProps {
+	books: BookProps[];
+}
 
+export const DisplayBooks: React.FC<DisplayBooksProps> = ({ books }) => {
 	return (
 		<Card alignItems='center' bg='greenyellow'>
 			<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
-				{booksData?.map((book) => (
+				{books?.map((book) => (
 					<div key={book.id}>
 						<BookComponent
 							id={book.id}

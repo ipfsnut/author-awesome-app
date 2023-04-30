@@ -31,6 +31,7 @@ import Image from 'next/image';
 import { api } from '~/utils/api';
 import { BookProps } from 'src/components/BookComponent';
 import BookComponent from 'src/components/BookComponent';
+import { DisplayBooks } from 'src/components/BookModule';
 
 const CreatePostWizard = () => {
 	const { user } = useUser();
@@ -45,26 +46,6 @@ const CreatePostWizard = () => {
 				height={50}
 			/>
 		</Avatar>
-	);
-};
-
-const DisplayBooks = ({ books }: { books: BookProps[] }) => {
-	return (
-		<Card alignItems='center' bg='greenyellow'>
-			<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
-				{books?.map((book) => (
-					<div key={book.id}>
-						<BookComponent
-							id={book.id}
-							title={book.title}
-							coverUrl={book.coverUrl}
-							authorId={book.authorId}
-							AuthorName={book.AuthorName}
-						/>
-					</div>
-				))}
-			</Stack>
-		</Card>
 	);
 };
 
