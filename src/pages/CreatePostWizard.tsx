@@ -17,3 +17,4 @@ export const CreatePostWizard = () => {
 		</Avatar>
 	);
 };
+export default CreatePostWizard;
