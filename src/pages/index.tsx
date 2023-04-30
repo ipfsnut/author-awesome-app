@@ -152,6 +152,7 @@ const Home: NextPage = () => {
 												width='100%'
 												height='400px'
 												frameBorder='0'
+												allowFullScreen
 											></iframe>
 										)}
 									</div>
