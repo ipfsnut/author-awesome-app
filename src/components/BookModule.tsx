@@ -19,6 +19,7 @@ export const DisplayBooks: React.FC<DisplayBooksProps> = ({ books }) => {
 							coverUrl={book.coverUrl}
 							authorId={book.authorId}
 							AuthorName={book.AuthorName}
+							external_resource={book.external_resource}
 						/>
 					</div>
 				))}

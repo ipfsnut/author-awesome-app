@@ -26,28 +26,12 @@ import {
 } from '@chakra-ui/react';
 import AddBookForm from 'src/components/AddBookForm';
 import { Avatar, AvatarBadge, AvatarGroup } from '@chakra-ui/react';
-import Image from 'next/image';
 
 import { api } from '~/utils/api';
 import { BookProps } from 'src/components/BookComponent';
 import BookComponent from 'src/components/BookComponent';
 import { DisplayBooks } from 'src/components/BookModule';
-
-const CreatePostWizard = () => {
-	const { user } = useUser();
-	console.log(user);
-	if (!user) return null;
-	return (
-		<Avatar bg='fuchsia'>
-			<Image
-				src={user.profileImageUrl}
-				alt='Profile image'
-				width={50}
-				height={50}
-			/>
-		</Avatar>
-	);
-};
+import { CreatePostWizard } from './CreatePostWizard';
 
 type Post = {
 	id: string;
@@ -160,7 +144,17 @@ const Home: NextPage = () => {
 							{books && <DisplayBooks books={books} />}
 							<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
 								{books?.map((bookData) => (
-									<div key={bookData.id}>{bookData.authorId}</div>
+									<div key={bookData.id}>
+										{bookData.external_resource && (
+											<iframe
+												src={bookData.external_resource}
+												title={`External resource for book ${bookData.id}`}
+												width='100%'
+												height='400px'
+												frameBorder='0'
+											></iframe>
+										)}
+									</div>
 								))}
 							</Stack>
 						</CardBody>

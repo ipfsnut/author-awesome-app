@@ -16,6 +16,7 @@ export type BookProps = {
 	coverUrl: string;
 	authorId: number;
 	AuthorName: string;
+	external_resource: string | null;
 };
 
 const BookComponent = ({ title, coverUrl, AuthorName }: BookProps) => {
