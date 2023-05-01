@@ -111,7 +111,7 @@ const Home: NextPage = () => {
 					<Card alignItems='center' bg='brown' gap='15'>
 						<CardHeader bg='yellowgreen'>
 							<Heading size='md' gap='10'>
-								Definitely Not Your Typical Client Report
+								Bring Back Satire
 							</Heading>
 						</CardHeader>
 						<CardBody alignItems='center' bg='greenyellow'>
