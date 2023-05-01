@@ -116,9 +116,21 @@ const Home: NextPage = () => {
 						</CardHeader>
 						<CardBody alignItems='center' bg='greenyellow'>
 							<Stack divider={<StackDivider />} spacing='4' bg='cyan'>
-								{post?.map((post) => (
-									<div key={post.id}>{post.content}</div>
+								{books?.map((bookData) => (
+									<div key={bookData.id}>
+										{bookData.external_resource && (
+											<iframe
+												src={bookData.external_resource}
+												title={`External resource for book ${bookData.id}`}
+												width='100%'
+												height='600px'
+												frameBorder='05'
+												allowFullScreen
+											></iframe>
+										)}
+									</div>
 								))}
+								,
 							</Stack>
 						</CardBody>
 						<CardFooter>
