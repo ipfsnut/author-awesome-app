@@ -1,12 +1,27 @@
-// src/components/BookView.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Book } from '@prisma/client';
 
 type BookViewProps = {
-	book: Book;
+	bookId: string;
 };
 
-export const BookView: React.FC<BookViewProps> = ({ book }) => {
+const BookView: React.FC<BookViewProps> = ({ bookId }) => {
+	const [book, setBook] = useState<Book | null>(null);
+
+	useEffect(() => {
+		const fetchBook = async () => {
+			const response = await fetch(`/api/books/${bookId}`);
+			const data = await response.json();
+			setBook(data.book);
+		};
+
+		fetchBook();
+	}, [bookId]);
+
+	if (!book) {
+		return <div>Loading...</div>;
+	}
+
 	return (
 		<div>
 			<h1>{book.title}</h1>
@@ -16,3 +31,5 @@ export const BookView: React.FC<BookViewProps> = ({ book }) => {
 		</div>
 	);
 };
+
+export default BookView;
