@@ -4,35 +4,40 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import fetchAuthorBooksFromAPI from 'src/components/fetchAuthorBooksFromAPI';
 import { BookProps } from 'src/components/BookComponent';
+import { useUser } from '@clerk/clerk-react';
 
 type Props = {
+	authorId: string;
 	authorName: string;
 	books: BookProps[];
 };
 
-export default function Profile({ authorName, books }: Props) {
+export default function Profile({ authorId, authorName, books }: Props) {
 	const router = useRouter();
 
 	console.log(router.query);
 
 	const [query, setQuery] = useState<string>('');
 
-	const { data: filteredBooks, isLoading } = useQuery(
-		['filteredBooks', query],
-		() => {
-			return fetchAuthorBooksFromAPI(router.query.id as string).then((data) => {
-				return data.filter((book) => {
-					return book.title.toLowerCase().includes(query.toLowerCase());
-				});
-			});
-		}
-	);
+	const { user } = useUser();
+	const isAdmin = user?.publicMetadata?.isAdmin;
+
+	const { data: allBooks, isLoading } = useQuery('allBooks', async () => {
+		const res = await fetch('/api/books');
+		return res.json();
+	});
 
 	if (router.isFallback) {
 		return <div>Loading...</div>;
 	}
+
+	const filteredBooks = allBooks?.filter((book: any) => {
+		return (
+			book.AuthorName.toLowerCase().includes(authorName.toLowerCase()) &&
+			book.title.toLowerCase().includes(query.toLowerCase())
+		);
+	});
 
 	return (
 		<div>
@@ -40,11 +45,6 @@ export default function Profile({ authorName, books }: Props) {
 				<title>{authorName} - Profile</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
-			return (
-			<div>
-				<Head>{/* ... */}</Head>
-			</div>
-			);
 			<main>
 				<h1 className='title'>{authorName}</h1>
 				<p>Search for a book:</p>
@@ -54,7 +54,7 @@ export default function Profile({ authorName, books }: Props) {
 					<div>
 						<h2>Books:</h2>
 						<ul>
-							{filteredBooks.map((book) => (
+							{filteredBooks.map((book: any) => (
 								<li key={book.id}>
 									<Link href={`/books/${book.id}`}>
 										<a>
@@ -93,13 +93,14 @@ export async function getStaticProps(context: GetStaticPropsContext) {
 		};
 	}
 	const res = await fetch(
-		`http://localhost:3000/api/books?authorId=${params.id}`
+		`http://localhost:3000/api/authorBooks?authorId=${params.id}`
 	);
 	const books = await res.json();
 	const authorName = books.length > 0 ? books[0].AuthorName : 'Unknown Author';
 
 	return {
 		props: {
+			authorId: params.id as string,
 			authorName,
 			books,
 		},

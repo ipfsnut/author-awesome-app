@@ -1,17 +1,23 @@
 import { type AppType } from 'next/app';
-import { api } from '~/utils/api';
-import { ChakraProvider, GlobalStyle } from '@chakra-ui/react';
-import theme from '../theme';
-import '~/styles/globals.css';
+
+import { api } from 'src/utils/api';
+
+import 'src/styles/globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Toaster } from 'react-hot-toast';
+import Head from 'next/head';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	return (
-		<ChakraProvider theme={theme}>
-			<ClerkProvider {...pageProps}>
-				<Component {...pageProps} />
-			</ClerkProvider>
-		</ChakraProvider>
+		<ClerkProvider {...pageProps}>
+			<Head>
+				<title>Chirp</title>
+				<meta name='description' content='💭' />
+				<link rel='icon' href='/favicon.ico' />
+			</Head>
+			<Toaster position='bottom-center' />
+			<Component {...pageProps} />
+		</ClerkProvider>
 	);
 };
 

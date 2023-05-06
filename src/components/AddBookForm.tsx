@@ -1,55 +1,122 @@
-import React, { useState } from 'react';
-import { Box, Input, VStack, Button, Card } from '@chakra-ui/react';
+import React from 'react';
+import {
+	Box,
+	Button,
+	FormControl,
+	FormLabel,
+	Input,
+	Stack,
+	useToast,
+	Textarea,
+} from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from 'react-query';
+import { BookProps } from './BookComponent';
+import { createBook } from '../utils/api';
 
-const AddBookForm = () => {
-	const [title, setTitle] = useState('');
-	const [coverUrl, setCoverUrl] = useState('');
-	const [AuthorName, setAuthorName] = useState('');
-	const [ExternalResource, setexternal_resource] = useState('');
+interface AddBookFormProps {
+	onBookAdded?: (book: BookProps) => void;
+}
 
-	const handleSubmit = (event: React.FormEvent) => {
-		event.preventDefault();
+type BookFormInputs = Omit<BookProps, 'id'>;
 
-		// Save the new book data to your database or API
-		// and update your application state here.
+const AddBookForm: React.FC<AddBookFormProps> = ({ onBookAdded }) => {
+	const { register, handleSubmit, reset } = useForm<BookFormInputs>();
+	const queryClient = useQueryClient();
+	const toast = useToast();
 
-		// Clear the form fields after submission.
-		setTitle('');
-		setCoverUrl('');
-		setAuthorName('');
-		setexternal_resource('');
-	};
+	const createBookMutation = useMutation(createBook, {
+		onSuccess: (data) => {
+			queryClient.invalidateQueries('books');
+			toast({
+				title: 'Book added!',
+				description: `Your book, ${data.title}, has been added to the library.`,
+				status: 'success',
+				duration: 5000,
+				isClosable: true,
+			});
+			onBookAdded && onBookAdded({ ...data, id: data.id! });
+		},
+		onError: (error: Error) => {
+			toast({
+				title: 'Error adding book',
+				description: error.message,
+				status: 'error',
+				duration: 5000,
+				isClosable: true,
+			});
+		},
+	});
+
+	const onSubmit = handleSubmit((data: BookFormInputs) => {
+		createBookMutation.mutate(data as any);
+		reset();
+	});
 
 	return (
-		<Card padding='5px' bg='black'>
-			<Box as='form' onSubmit={handleSubmit}>
-				<VStack spacing={4}>
-					<Input
-						placeholder='Title'
-						value={title}
-						onChange={(event) => setTitle(event.target.value)}
-					/>
-					<Input
-						placeholder='Cover URL'
-						value={coverUrl}
-						onChange={(event) => setCoverUrl(event.target.value)}
-					/>
-					<Input
-						placeholder='Author Name'
-						value={AuthorName}
-						onChange={(event) => setAuthorName(event.target.value)}
-					/>
-					<Input
-						placeholder='External Resource'
-						value={ExternalResource}
-						onChange={(event) => setexternal_resource(event.target.value)}
-					/>
-					<Button type='submit' colorScheme='blue'>
+		<Box>
+			<form onSubmit={onSubmit}>
+				<Stack spacing={4}>
+					<FormControl>
+						<FormLabel htmlFor='title'>Title</FormLabel>
+						<Input
+							id='title'
+							placeholder='Enter book title'
+							{...register('title', { required: true })}
+						/>
+					</FormControl>
+
+					<FormControl>
+						<FormLabel htmlFor='coverUrl'>Cover URL</FormLabel>
+						<Input
+							id='coverUrl'
+							placeholder='Enter cover image URL'
+							{...register('coverUrl', { required: true })}
+						/>
+					</FormControl>
+
+					<FormControl>
+						<FormLabel htmlFor='authorId'>Author ID</FormLabel>
+						<Input
+							id='authorId'
+							placeholder='Enter author ID'
+							{...register('authorId', { required: true })}
+						/>
+					</FormControl>
+
+					<FormControl>
+						<FormLabel htmlFor='AuthorName'>Author Name</FormLabel>
+						<Input
+							id='AuthorName'
+							placeholder='Enter author name'
+							{...register('AuthorName', { required: true })}
+						/>
+					</FormControl>
+
+					<FormControl>
+						<FormLabel htmlFor='external_resource'>External Resource</FormLabel>
+						<Input
+							id='external_resource'
+							placeholder='Enter external resource'
+							{...register('external_resource')}
+						/>
+					</FormControl>
+
+					<FormControl>
+						<FormLabel htmlFor='metadata'>Metadata</FormLabel>
+						<Textarea
+							id='metadata'
+							placeholder='Enter metadata'
+							{...register('metadata')}
+						/>
+					</FormControl>
+
+					<Button colorScheme='blue' type='submit'>
 						Add Book
 					</Button>
-				</VStack>
-			</Box>
-		</Card>
+				</Stack>
+			</form>
+		</Box>
 	);
 };
 

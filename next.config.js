@@ -1,6 +1,6 @@
-// next.config.js
 module.exports = {
-	images: {
-		domains: ['images.clerk.dev'],
+	env: {
+		CLERK_API_KEY: process.env.CLERK_API_KEY,
+		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
 	},
 };
