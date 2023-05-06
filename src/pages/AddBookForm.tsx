@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from 'react-query';
-import { BookProps } from './BookComponent';
+import { BookProps } from '../components/BookComponent';
 import { createBook } from '../utils/api';
 
 interface AddBookFormProps {

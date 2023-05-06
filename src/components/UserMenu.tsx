@@ -22,7 +22,7 @@ import {
 	Link,
 } from '@chakra-ui/react';
 import { UserProfile } from '@clerk/nextjs';
-import AddBookForm from 'src/components/AddBookForm';
+import AddBookForm from 'src/pages/AddBookForm';
 import { useUser } from '@clerk/nextjs';
 import { BookProps } from './BookComponent';
 import settings from 'src/components/Settings';
