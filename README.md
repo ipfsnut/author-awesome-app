@@ -132,4 +132,4 @@ License
 Author Awesome App is released under the MIT License.
 
 Acknowledgements
-This project is based on the Chirp repository and has been modified to fit the unique requirements of the Author Awesome App.
+This project is based on the Chirp repository and has been modified to fit the unique requirements of the Author Awesome App. Find the Chirp repository here: https://github.com/t3dotgg/chirp/tree/main/
