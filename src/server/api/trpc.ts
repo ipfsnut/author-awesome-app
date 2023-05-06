@@ -17,7 +17,6 @@
 import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
 
 import { prisma } from 'src/server/db';
-import { getAuth, clerkClient } from '@clerk/nextjs/server';
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -25,22 +24,21 @@ import { getAuth, clerkClient } from '@clerk/nextjs/server';
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+export const createTRPCContext = (opts: CreateNextContextOptions) => {
 	const { req } = opts;
-	const session = getAuth(req);
+	const sesh = getAuth(req);
 
-	const userId = session.userId;
-
-	// Get the user's email addresses from Clerk if they are logged in
-	// This is used to determine if they are an admin or not
-	const userData = userId ? await clerkClient.users.getUser(userId) : null;
-	const emailAddresses = userData ? userData.emailAddresses : [];
+	const userId = sesh.userId;
 
 	return {
 		prisma,
 		userId,
-		emailAddresses,
 	};
+};
+
+export type Context = {
+	prisma: PrismaClient;
+	userId: string | null;
 };
 
 /**
@@ -50,7 +48,9 @@ export const createTRPCContext = async (opts: CreateNextContextOptions) => {
  */
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
+import { getAuth } from '@clerk/nextjs/server';
 import { ZodError } from 'zod';
+import { PrismaClient } from '@prisma/client';
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
 	transformer: superjson,
@@ -104,30 +104,4 @@ const enforceUserIsAuthed = t.middleware(async ({ ctx, next }) => {
 });
 
 export const privateProcedure = t.procedure.use(enforceUserIsAuthed);
-
-const enforceUserIsAdmin = t.middleware(async ({ ctx, next }) => {
-	if (!ctx.userId) {
-		throw new TRPCError({
-			code: 'UNAUTHORIZED',
-		});
-	}
-
-	const userData = await clerkClient.users.getUser(ctx.userId);
-	const userRole = userData.privateMetadata.role;
-
-	if (userRole !== 'ADMIN') {
-		throw new TRPCError({
-			code: 'FORBIDDEN',
-		});
-	}
-
-	return next({
-		ctx: {
-			userId: ctx.userId,
-		},
-	});
-});
-
-export const adminProcedure = t.procedure
-	.use(enforceUserIsAuthed)
-	.use(enforceUserIsAdmin);
+export { t };
