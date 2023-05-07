@@ -9,3 +9,7 @@ export type Book = {
 	external_resource?: string;
 	metadata?: string;
 };
+
+export type BooksResponse = {
+	books: Book[];
+};

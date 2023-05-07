@@ -23,7 +23,7 @@ model Book {
   id               Int      @id @default(autoincrement())
   title            String
   coverUrl         String
-  authorId         Int
+  authorId         String
   AuthorName       String
   external_resource String?  // This field can be nullable
   metadata         String?  // This field can be nullable

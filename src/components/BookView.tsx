@@ -1,23 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Book } from '@prisma/client';
+import React from 'react';
+import { Book } from 'src/types';
 
 type BookViewProps = {
-	bookId: string;
+	book: Book;
 };
 
-const BookView: React.FC<BookViewProps> = ({ bookId }) => {
-	const [book, setBook] = useState<Book | null>(null);
-
-	useEffect(() => {
-		const fetchBook = async () => {
-			const response = await fetch(`/api/books/${bookId}`);
-			const data = await response.json();
-			setBook(data.book);
-		};
-
-		fetchBook();
-	}, [bookId]);
-
+const BookView: React.FC<BookViewProps> = ({ book }) => {
 	if (!book) {
 		return <div>Loading...</div>;
 	}
@@ -26,7 +14,9 @@ const BookView: React.FC<BookViewProps> = ({ bookId }) => {
 		<div>
 			<h1>{book.title}</h1>
 			<img src={book.coverUrl} alt={book.title} />
-			<p>Author: {book.AuthorName}</p>
+			<p>Author: {book.authorName}</p>
+			<p>Cover: {book.coverUrl}</p>
+			<p>External Resource: {book.external_resource} </p>
 			{/* Add more fields as needed */}
 		</div>
 	);
