@@ -1,6 +1,7 @@
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs';
 import { type NextPage } from 'next';
-
+import BookList from 'src/components/BookList';
+import { useQuery } from 'react-query';
 import { api } from 'src/utils/api';
 
 import Image from 'next/image';
@@ -9,6 +10,11 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { PageLayout } from 'src/components/layout';
 import { PostView } from 'src/components/postView';
+import { Book } from '@prisma/client';
+
+type Props = {
+	books: Book[];
+};
 
 const CreatePostWizard = () => {
 	const { user } = useUser();
@@ -99,10 +105,16 @@ const Home: NextPage = () => {
 	const { isLoaded: userLoaded, isSignedIn } = useUser();
 
 	// Start fetching asap
-	api.posts.getAll.useQuery();
+	api.books.getAll.useQuery();
+
+	// Fetch the list of books
+	const { data: books, isLoading } = api.books.getAll.useQuery();
 
 	// Return empty div if user isn't loaded
-	if (!userLoaded) return <div />;
+	if (!userLoaded || isLoading) return <LoadingPage />;
+
+	if (!books) return <div>No books found</div>;
+	// Return empty div if user isn't loaded
 
 	return (
 		<PageLayout>
@@ -114,6 +126,16 @@ const Home: NextPage = () => {
 				)}
 				{isSignedIn && <CreatePostWizard />}
 			</div>
+			<div className='flex border-b border-slate-400 p-4'>
+				{!isSignedIn && (
+					<div className='flex justify-center'>
+						<SignInButton />
+					</div>
+				)}
+				{isSignedIn && <CreatePostWizard />}
+			</div>
+			<BookList books={books} />
+			<Feed />
 
 			<Feed />
 			<div className='flex items-center justify-between p-4 text-xl'>
