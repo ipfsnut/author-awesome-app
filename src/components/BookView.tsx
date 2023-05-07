@@ -1,3 +1,4 @@
+// src/components/BookView.tsx
 import React from 'react';
 import { Book } from 'src/types';
 
@@ -18,6 +19,14 @@ const BookView: React.FC<BookViewProps> = ({ book }) => {
 			<p>Cover: {book.coverUrl}</p>
 			<p>External Resource: {book.external_resource} </p>
 			{/* Add more fields as needed */}
+			<div>
+				<h2>Book Content:</h2>
+				<iframe
+					src={book.external_resource}
+					style={{ width: '100%', height: '500px', border: 'none' }}
+					title={book.title}
+				></iframe>
+			</div>
 		</div>
 	);
 };

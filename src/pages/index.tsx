@@ -3,6 +3,8 @@ import { type NextPage } from 'next';
 import BookList from 'src/components/BookList';
 import { useQuery } from 'react-query';
 import { api } from 'src/utils/api';
+import AddBookForm from './AddBookForm';
+import Navbar from 'src/components/NavBar';
 
 import Image from 'next/image';
 import { LoadingPage, LoadingSpinner } from 'src/components/loading';
@@ -118,14 +120,7 @@ const Home: NextPage = () => {
 
 	return (
 		<PageLayout>
-			<div className='flex border-b border-slate-400 p-4'>
-				{!isSignedIn && (
-					<div className='flex justify-center'>
-						<SignInButton />
-					</div>
-				)}
-				{isSignedIn && <CreatePostWizard />}
-			</div>
+			<Navbar />
 			<div className='flex border-b border-slate-400 p-4'>
 				{!isSignedIn && (
 					<div className='flex justify-center'>
@@ -135,6 +130,8 @@ const Home: NextPage = () => {
 				{isSignedIn && <CreatePostWizard />}
 			</div>
 			<BookList books={books} />
+
+			{isSignedIn && <AddBookForm />}
 			<Feed />
 
 			<Feed />
