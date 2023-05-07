@@ -17,7 +17,6 @@ const BookView: React.FC<BookViewProps> = ({ book }) => {
 			<img src={book.coverUrl} alt={book.title} />
 			<p>Author: {book.authorName}</p>
 			<p>Cover: {book.coverUrl}</p>
-			<p>External Resource: {book.external_resource} </p>
 			{/* Add more fields as needed */}
 			<div>
 				<h2>Book Content:</h2>

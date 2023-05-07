@@ -12,13 +12,11 @@ import { filterUserForClient } from 'src/server/helpers/filterUserForClient';
 import type { Post } from '@prisma/client';
 
 const addUserDataToPosts = async (posts: Post[]) => {
-	const userId = posts.map((post) => post.authorId);
-	const users = (
-		await clerkClient.users.getUserList({
-			userId: userId,
-			limit: 110,
-		})
-	).map(filterUserForClient);
+	const userIds = posts.map((post) => post.authorId);
+
+	// Fetch users in a single call, using clerkClient.users.getUserList
+	const userList = await clerkClient.users.getUserList({ userId: userIds });
+	const users = userList.map(filterUserForClient);
 
 	return posts.map((post) => {
 		const author = users.find((user) => user.id === post.authorId);
@@ -31,7 +29,7 @@ const addUserDataToPosts = async (posts: Post[]) => {
 			});
 		}
 		if (!author.username) {
-			// user the ExternalUsername
+			// Use the ExternalUsername
 			if (!author.externalUsername) {
 				throw new TRPCError({
 					code: 'INTERNAL_SERVER_ERROR',

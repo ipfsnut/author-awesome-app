@@ -14,6 +14,19 @@ import { PageLayout } from 'src/components/layout';
 import { PostView } from 'src/components/postView';
 import { Book } from '@prisma/client';
 
+import {
+	Box,
+	VStack,
+	HStack,
+	Heading,
+	Text,
+	Avatar,
+	Spacer,
+	Button,
+	Input,
+	Skeleton,
+} from '@chakra-ui/react';
+
 type Props = {
 	books: Book[];
 };
@@ -95,11 +108,29 @@ const Feed = () => {
 	if (!data) return <div>Something went wrong</div>;
 
 	return (
-		<div className='flex grow flex-col overflow-y-scroll'>
-			{[...data, ...data, ...data, ...data].map((fullPost) => (
-				<PostView {...fullPost} key={fullPost.post.id} />
+		<VStack spacing={4} alignItems='stretch' w='100%'>
+			{data.map((fullPost) => (
+				<Box
+					key={fullPost.post.id}
+					borderRadius='md'
+					borderWidth='1px'
+					borderColor='green.200' // Add a light green border color
+					p={4}
+					boxShadow='md'
+				>
+					<HStack>
+						<div>
+							<Avatar src={fullPost.author.profileImageUrl} />
+						</div>
+						<Box>
+							<Heading size='sm'>{fullPost.author.username}</Heading>
+							<Text fontSize='sm'>{fullPost.author.username}</Text>
+						</Box>
+					</HStack>
+					<Text mt={2}>{fullPost.post.content}</Text>
+				</Box>
 			))}
-		</div>
+		</VStack>
 	);
 };
 
@@ -127,7 +158,9 @@ const Home: NextPage = () => {
 						<SignInButton />
 					</div>
 				)}
-				{isSignedIn && <CreatePostWizard />}
+				<HStack spacing={8} py={4}>
+					{isSignedIn && <CreatePostWizard />}
+				</HStack>
 			</div>
 			<BookList books={books} />
 
@@ -136,7 +169,7 @@ const Home: NextPage = () => {
 
 			<Feed />
 			<div className='flex items-center justify-between p-4 text-xl'>
-				<a href='https://github.com/t3dotgg/chirp'>
+				<a href='https://github.com/ipfsnut/author-awesome-app/blob/701cdf9e604333693a0775b1c58550c5718e6f5c/README.md'>
 					<div className='flex items-center justify-center gap-2'>
 						<svg
 							xmlns='http://www.w3.org/2000/svg'
@@ -150,9 +183,6 @@ const Home: NextPage = () => {
 						<div>Github</div>
 					</div>
 				</a>
-				<span>
-					<a href='https://patreon.com/t3dotgg'>🐦 Chirp Blue</a>
-				</span>
 			</div>
 		</PageLayout>
 	);
