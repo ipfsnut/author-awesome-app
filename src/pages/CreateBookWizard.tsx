@@ -103,3 +103,4 @@ export const CreateBookWizard = ({ onCreate }: Props) => {
 		</div>
 	);
 };
+export default CreateBookWizard;
