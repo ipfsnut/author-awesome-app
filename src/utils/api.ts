@@ -8,7 +8,6 @@ import { httpBatchLink, loggerLink } from '@trpc/client';
 import { createTRPCNext } from '@trpc/next';
 import { type inferRouterInputs, type inferRouterOutputs } from '@trpc/server';
 import superjson from 'superjson';
-import axios from 'axios';
 import { BookProps } from 'src/components/BookComponent';
 
 import { type AppRouter } from 'src/server/api/root';
@@ -54,13 +53,6 @@ export const api = createTRPCNext<AppRouter>({
 	 */
 	ssr: false,
 });
-
-export async function createBook(
-	book: Omit<BookProps, 'id'>
-): Promise<BookProps> {
-	const response = await axios.post('/api/books', book);
-	return response.data;
-}
 
 /**
  * Inference helper for inputs.

@@ -22,7 +22,7 @@ import {
 	Link,
 } from '@chakra-ui/react';
 import { UserProfile } from '@clerk/nextjs';
-import AddBookForm from 'src/pages/AddBookForm';
+
 import { useUser } from '@clerk/nextjs';
 import { BookProps } from './BookComponent';
 import settings from 'src/components/Settings';
@@ -81,9 +81,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ avatarUrl, onBookAdded }) => {
 				<ModalContent>
 					<ModalHeader>Add a New Book</ModalHeader>
 					<ModalCloseButton />
-					<ModalBody>
-						<AddBookForm onBookAdded={handleBookAdded} />
-					</ModalBody>
+					<ModalBody></ModalBody>
 					<ModalFooter>
 						<Button onClick={onAddBookModalClose}>Close</Button>
 					</ModalFooter>

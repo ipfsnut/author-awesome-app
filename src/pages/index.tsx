@@ -3,8 +3,8 @@ import { type NextPage } from 'next';
 import BookList from 'src/components/BookList';
 import { useQuery } from 'react-query';
 import { api } from 'src/utils/api';
-import AddBookForm from './AddBookForm';
 import Navbar from 'src/components/NavBar';
+import BookView from 'src/components/BookView';
 
 import Image from 'next/image';
 import { LoadingPage, LoadingSpinner } from 'src/components/loading';
@@ -13,6 +13,7 @@ import { toast } from 'react-hot-toast';
 import { PageLayout } from 'src/components/layout';
 import { PostView } from 'src/components/postView';
 import { Book } from '@prisma/client';
+import { CreateBookWizard } from './CreateBookWizard';
 
 import {
 	Box,
@@ -142,7 +143,11 @@ const Home: NextPage = () => {
 
 	// Fetch the list of books
 	const { data: books, isLoading } = api.books.getAll.useQuery();
-
+	const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+	const handleBookSelect = (book: Book) => {
+		setSelectedBook(book);
+	};
+	const [showAddBookForm, setShowAddBookForm] = useState(false);
 	// Return empty div if user isn't loaded
 	if (!userLoaded || isLoading) return <LoadingPage />;
 
@@ -162,9 +167,19 @@ const Home: NextPage = () => {
 					{isSignedIn && <CreatePostWizard />}
 				</HStack>
 			</div>
-			<BookList books={books} />
+			<BookList books={books} onBookSelect={handleBookSelect} />
+			{selectedBook && <BookView book={selectedBook} />}
 
-			{isSignedIn && <AddBookForm />}
+			<Button onClick={() => setShowAddBookForm(!showAddBookForm)}>
+				{showAddBookForm ? 'Hide Add Book Form' : 'Add Book'}
+			</Button>
+			{showAddBookForm && (
+				<CreateBookWizard
+					onCreate={function (book: Book): void {
+						throw new Error('Function not implemented.');
+					}}
+				/>
+			)}
 			<Feed />
 
 			<Feed />
