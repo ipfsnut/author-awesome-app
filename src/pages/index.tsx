@@ -151,7 +151,7 @@ const Home: NextPage = () => {
 	};
 	const [showAddBookForm, setShowAddBookForm] = useState(false);
 	// Return empty div if user isn't loaded
-	if (!userLoaded || isLoading) return <LoadingPage />;
+	//if (!userLoaded || isLoading) return <LoadingPage />;
 
 	if (!books) return <div>No books found</div>;
 	// Return empty div if user isn't loaded
