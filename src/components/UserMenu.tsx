@@ -21,11 +21,8 @@ import {
 	useDisclosure,
 	Link,
 } from '@chakra-ui/react';
-import { UserProfile } from '@clerk/nextjs';
-
 import { useUser } from '@clerk/nextjs';
 import { BookProps } from './BookComponent';
-import settings from 'src/components/Settings';
 
 interface UserMenuProps {
 	avatarUrl?: string;
