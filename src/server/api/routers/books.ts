@@ -26,12 +26,20 @@ export const booksRouter = createTRPCRouter({
 		}),
 
 	getAll: publicProcedure.query(async ({ ctx }) => {
-		const books = await ctx.prisma.book.findMany({
-			take: 100,
-			orderBy: [{ createdAt: 'desc' }],
-		});
+		try {
+			const books = await ctx.prisma.book.findMany({
+				take: 100,
+				orderBy: [{ createdAt: 'desc' }],
+			});
 
-		return books;
+			return books;
+		} catch (error) {
+			console.error('Error in getAll route:', error);
+			throw new TRPCError({
+				code: 'INTERNAL_SERVER_ERROR',
+				message: 'Error fetching books',
+			});
+		}
 	}),
 
 	getBooksByUserId: publicProcedure
