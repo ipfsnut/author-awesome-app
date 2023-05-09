@@ -97,8 +97,10 @@ const CreatePostWizard = () => {
 };
 
 const Feed = () => {
-	const { data, isLoading: postsLoading } = api.posts.getAll.useQuery();
-
+	const { data, error, isLoading: postsLoading } = api.posts.getAll.useQuery();
+	if (error) {
+		console.error('Error fetching books on client:', error); // Add this line to log the error on the client side
+	}
 	if (postsLoading)
 		return (
 			<div className='flex grow'>

@@ -32,6 +32,7 @@ export const booksRouter = createTRPCRouter({
 				orderBy: [{ createdAt: 'desc' }],
 			});
 
+			console.log('Books fetched:', books); // Add this line to log the fetched books
 			return books;
 		} catch (error) {
 			console.error('Error in getAll route:', error);
