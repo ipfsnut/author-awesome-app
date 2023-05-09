@@ -32,6 +32,11 @@ type Props = {
 	books: Book[];
 };
 
+type SelectedBook = {
+	book: Book;
+	index: number;
+};
+
 const CreatePostWizard = () => {
 	const { user } = useUser();
 
@@ -145,10 +150,11 @@ const Home: NextPage = () => {
 
 	// Fetch the list of books
 	const { data: books, isLoading } = api.books.getAll.useQuery();
-	const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-	const handleBookSelect = (book: Book) => {
-		setSelectedBook(book);
+	const [selectedBook, setSelectedBook] = useState<SelectedBook | null>(null);
+	const handleBookSelect = (book: Book, index: number) => {
+		setSelectedBook({ book, index });
 	};
+
 	const [showAddBookForm, setShowAddBookForm] = useState(false);
 	// Return empty div if user isn't loaded
 	//if (!userLoaded || isLoading) return <LoadingPage />;
@@ -169,8 +175,10 @@ const Home: NextPage = () => {
 					{isSignedIn && <CreatePostWizard />}
 				</HStack>
 			</div>
-			<BookList books={books} onBookSelect={handleBookSelect} />
-			{selectedBook && <BookView book={selectedBook} />}
+			<BookList
+				books={books}
+				onBookSelect={(book, index) => handleBookSelect(book, index)}
+			/>
 
 			<Button onClick={() => setShowAddBookForm(!showAddBookForm)}>
 				{showAddBookForm ? 'Hide Add Book Form' : 'Add Book'}

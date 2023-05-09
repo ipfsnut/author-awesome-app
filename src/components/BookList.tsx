@@ -1,39 +1,76 @@
-import { Button, Box, Image } from '@chakra-ui/react';
+import {
+	Box,
+	VStack,
+	HStack,
+	Image,
+	Text,
+	Button,
+	Spacer,
+	Center,
+} from '@chakra-ui/react';
 import { Book } from '@prisma/client';
+import { useState } from 'react';
+import BookView from './BookView';
+import React from 'react';
 
 type Props = {
 	books: Book[];
-	onBookSelect: (book: Book) => void;
+	onBookSelect: (book: Book, index: number) => void;
 };
-
 const BookList: React.FC<Props> = ({ books, onBookSelect }) => {
+	const [selectedBook, setSelectedBook] = useState<{
+		book: Book | null;
+		index: number | null;
+	}>({ book: null, index: null });
+
+	const handleBookSelect = (book: Book, index: number) => {
+		setSelectedBook({ book, index });
+	};
 	return (
-		<Box>
-			<Box as='h2' mb={4}>
-				Books
-			</Box>
-			<Box as='ul'>
-				{books.map((book) => (
-					<Box as='li' key={book.id} mb={4}>
-						<Box>
-							{book.title} by {book.AuthorName}
-						</Box>
-						<Box position='relative' width='100px' height='150px'>
-							<Image
-								src={book.coverUrl}
-								alt={`Cover of ${book.title}`}
-								width='100px' // Adjust width to your preference
-								height='150px' // Adjust height based on aspect ratio (3:2 in this example)
-								objectFit='cover'
-							/>
-						</Box>
-						<Button onClick={() => onBookSelect(book)} variant='outline' mt={2}>
-							Read Now
-						</Button>
+		<VStack spacing={4} alignItems='stretch' w='100%'>
+			{books.map((book, index) => (
+				<React.Fragment key={book.id}>
+					<Box
+						borderWidth='1px'
+						borderRadius='lg'
+						p={4}
+						boxShadow='md'
+						_hover={{ boxShadow: 'xl' }}
+					>
+						<HStack spacing={4}>
+							<Center boxSize='100px'>
+								<Image
+									src={book.coverUrl}
+									alt={`Cover of ${book.title}`}
+									objectFit='contain'
+									borderRadius='md'
+									boxSize='100%'
+									w='100%'
+									h='100%'
+								/>
+							</Center>
+							<VStack alignItems='start' flexGrow={1}>
+								<Text fontWeight='bold' fontSize='lg'>
+									{book.title}
+								</Text>
+								<Text fontSize='sm'>by {book.AuthorName}</Text>
+							</VStack>
+							<Spacer />
+							<Button
+								onClick={() => handleBookSelect(book, index)}
+								variant='outline'
+								mt={2}
+							>
+								Read Now
+							</Button>
+							{selectedBook.book && selectedBook.index === index && (
+								<BookView book={selectedBook.book} />
+							)}
+						</HStack>
 					</Box>
-				))}
-			</Box>
-		</Box>
+				</React.Fragment>
+			))}
+		</VStack>
 	);
 };
 

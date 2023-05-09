@@ -22,6 +22,7 @@ const BookView: React.FC<BookViewProps> = ({ book }) => {
 			<div>
 				<h2>Book Content:</h2>
 				<iframe
+					allowFullScreen
 					src={book.external_resource || ''}
 					style={{ width: '100%', height: '500px', border: 'none' }}
 					title={book.title}
